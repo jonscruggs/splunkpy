@@ -15,3 +15,14 @@ and then choose `flask` as template.
 
 # example constant variable
 NAME = "splunkpy"
+
+def yesno(question):
+    """Simple Yes/No Function."""
+    prompt = f'{question}? (y/n): '
+    ans = input(prompt).strip().lower()
+    if ans not in ['y', 'n']:
+        print(f'{ans} is invalid, please try again...')
+        return yesno(question)
+    if ans == 'y':
+        return True
+    return False
