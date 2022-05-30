@@ -79,7 +79,34 @@ def upload_file(file_name, bucket, object_name=None):
     # Upload the file
     s3_client = boto3.client('s3')
     try:
+        logger.info("Initiating upload of {} to bucket {}".format(file_name,bucket))
         response = s3_client.upload_file(file_name, bucket, object_name)
+        logger.info("Upload successfull")
+    except ClientError as e:
+        logging.error(e)
+        return False
+    return True
+
+def download_file(object_name, bucket, file_name=None):
+    """Download a file from an S3 bucket
+
+    :param file_name: File to download
+    :param bucket: Bucket to download from
+    :param object_name: S3 object name. If not specified then file_name is used
+    :return: True if file was downloadss, else False
+    """
+    # If S3 object_name was not specified, use file_name
+    if file_name is None:
+        file_name = object_name
+
+    # Upload the file
+    s3_client = boto3.client('s3')
+    try:
+        logger.info("Initiating download of {} from bucket {}".format(object_name,bucket))
+        response = s3_client.download_file(bucket, object_name,file_name)
+        logger.debug(response)
+        logger.info("Download successfull.")
+
     except ClientError as e:
         logging.error(e)
         return False
