@@ -128,7 +128,7 @@ def downloadFile(object_name, bucket, file_name=None):
     try:
         logger.info("Initiating download of {} from bucket {}".format(object_name, bucket))
         response = s3_client.download_file(bucket, object_name, file_name)
-        logger.debug(response)
+        logger.debug("Response: {}".format(response))
         logger.info("Download successful.")
 
     except ClientError as e:
