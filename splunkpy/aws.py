@@ -8,7 +8,21 @@ from time import sleep
 
 logger = logging.getLogger(__name__)
 
-def getInstanceByTag(tag,value):
+def getInstancesByTag(tag,value):
+    #gets the first InstanceId by tag
+    client = boto3.client('ec2')
+    custom_filter = [{
+        'Name':'tag:'+ tag, 
+        'Values': [value]}]
+    response = client.describe_instances(Filters=custom_filter)
+    try:
+        instanceId = response["Reservations"][0]['Instances']
+        return instanceId
+    except IndexError:
+        logger.error("No instances by that tag")
+        return False
+
+def getInstanceIDByTag(tag,value):
     #gets the first InstanceId by tag
     client = boto3.client('ec2')
     custom_filter = [{
@@ -17,6 +31,20 @@ def getInstanceByTag(tag,value):
     response = client.describe_instances(Filters=custom_filter)
     try:
         instanceId = response["Reservations"][0]['Instances'][0]['InstanceId']
+        return instanceId
+    except IndexError:
+        logger.error("No instance by that tag")
+        return False
+
+def getInstanceIPByTag(tag,value):
+    #gets the first InstanceId by tag
+    client = boto3.client('ec2')
+    custom_filter = [{
+        'Name':'tag:'+ tag, 
+        'Values': [value]}]
+    response = client.describe_instances(Filters=custom_filter)
+    try:
+        instanceId = response["Reservations"][0]['Instances'][0]['PublicDnsName']
         return instanceId
     except IndexError:
         logger.error("No instance by that tag")
@@ -63,7 +91,7 @@ def runSSMCommand(instanceID, command):
         )
 
 
-def upload_file(file_name, bucket, object_name=None):
+def uploadFile(file_name, bucket, object_name=None):
     """Upload a file to an S3 bucket
 
     :param file_name: File to upload
@@ -87,7 +115,7 @@ def upload_file(file_name, bucket, object_name=None):
         return False
     return True
 
-def download_file(object_name, bucket, file_name=None):
+def downloadFile(object_name, bucket, file_name=None):
     """Download a file from an S3 bucket
 
     :param file_name: File to download
@@ -99,7 +127,7 @@ def download_file(object_name, bucket, file_name=None):
     if file_name is None:
         file_name = object_name
 
-    # Upload the file
+    # Download the file
     s3_client = boto3.client('s3')
     try:
         logger.info("Initiating download of {} from bucket {}".format(object_name,bucket))
