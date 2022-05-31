@@ -16,6 +16,7 @@ and then choose `flask` as template.
 # example constant variable
 NAME = "splunkpy"
 
+
 def yesno(question):
     """Simple Yes/No Function."""
     prompt = f'{question}? (y/n): '

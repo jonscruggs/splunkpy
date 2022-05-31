@@ -1,4 +1,4 @@
-ERROR_LOG_FILENAME = ".boto-errors.log"
+ERROR_LOG_FILENAME = "/var/log/splunkpy.log"
 
 LOGGING_CONFIG = {
     "version": 1,
@@ -35,6 +35,8 @@ LOGGING_CONFIG = {
             ],
         },
     },
-    
+
     "root": {"level": "DEBUG", "handlers": ["logfile"]},
 }
+
+BUCKET_NAME = "scruggs-splunk"
